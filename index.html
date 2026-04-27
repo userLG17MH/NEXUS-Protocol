@@ -102,6 +102,20 @@
 
         .mono { font-family: 'Fira Code', monospace; }
         .secure-tag { background: #312e81; color: #818cf8; padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; margin-left: 8px; }
+
+        /* Icon Button Styling */
+        .icon-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            transition: color 0.2s;
+        }
+        .icon-btn:hover { color: #00f2ff; }
     </style>
 </head>
 <body>
@@ -150,7 +164,15 @@
 
                 <div>
                     <label class="block text-[10px] text-zinc-500 uppercase font-bold mb-1">Raw Hex Preview</label>
-                    <textarea id="hexPreview" readonly class="w-full bg-black border border-zinc-800 rounded p-3 text-[10px] mono text-cyan-500 outline-none resize-none overflow-hidden" rows="1"></textarea>
+                    <div class="relative group">
+                        <textarea id="hexPreview" readonly class="w-full bg-black border border-zinc-800 rounded p-3 pr-10 text-[10px] mono text-cyan-500 outline-none resize-none overflow-hidden" rows="1"></textarea>
+                        <div class="absolute top-1 right-1 flex items-center h-full pb-2">
+                             <button id="mainCopyBtn" onclick="NexusUI.copyHexPreview()" class="icon-btn" title="Copy Hex">
+                                <svg id="copyIcon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg id="checkIcon" class="hidden text-green-500" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                             </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="relative">
@@ -379,6 +401,22 @@
                 const t = document.createElement("textarea"); document.body.appendChild(t); 
                 t.value = val; t.select(); document.execCommand("copy"); 
                 document.body.removeChild(t); 
+            },
+
+            copyHexPreview: function() {
+                const val = document.getElementById('hexPreview').value;
+                this.copy(val);
+                
+                const copyIcon = document.getElementById('copyIcon');
+                const checkIcon = document.getElementById('checkIcon');
+                
+                copyIcon.classList.add('hidden');
+                checkIcon.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    checkIcon.classList.add('hidden');
+                    copyIcon.classList.remove('hidden');
+                }, 1500);
             }
         };
     </script>
