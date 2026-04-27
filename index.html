@@ -163,7 +163,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-[10px] text-zinc-500 uppercase font-bold mb-1">Raw Hex Preview</label>
+                    <label class="block text-[10px] text-zinc-500 uppercase font-bold mb-1">Raw Hex Preview (Fixed 32 chars)</label>
                     <div class="relative group">
                         <textarea id="hexPreview" readonly class="w-full bg-black border border-zinc-800 rounded p-3 pr-10 text-[10px] mono text-cyan-500 outline-none resize-none overflow-hidden" rows="1"></textarea>
                         <div class="absolute top-1 right-1 flex items-center h-full pb-2">
@@ -325,8 +325,17 @@
                 const text = document.getElementById('textInput').value;
                 const bytes = new TextEncoder().encode(text);
                 
-                const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join('');
-                document.getElementById('hexPreview').value = hex || '00';
+                // Convert bytes to hex
+                let hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join('');
+                
+                // Force length to exactly 32 hex characters (16 bytes)
+                if (hex.length > 32) {
+                    hex = hex.substring(0, 32);
+                } else {
+                    hex = hex.padEnd(32, '0');
+                }
+                
+                document.getElementById('hexPreview').value = hex;
                 
                 let mctStr = "";
                 bytes.forEach(b => {
